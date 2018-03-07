@@ -10,6 +10,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"syscall"
 	"unicode/utf8"
 
 	"gopkg.in/telegram-bot-api.v4"
@@ -67,7 +68,11 @@ func main() {
 		multiWriter := io.MultiWriter(os.Stdout, logFile)
 		log.SetOutput(multiWriter)
 	}
-	bot, err := tgbotapi.NewBotAPI(os.Args[1])
+
+	log.Println("Loading config")
+	config := NewBotConfig()
+
+	bot, err := tgbotapi.NewBotAPI(config.Token)
 	if err != nil {
 		log.Panic(err)
 	}
@@ -135,7 +140,7 @@ func main() {
 	}()
 
 	c := make(chan os.Signal)
-	signal.Notify(c, os.Interrupt)
+	signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
 	<-c
 	log.Println("\nInterrupt signal caught, exiting!")
 }
