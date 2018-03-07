@@ -20,6 +20,12 @@
 // SOFTWARE.
 package main
 
+import (
+	"gopkg.in/telegram-bot-api.v4"
+)
+
 // VERSION is a bot version string and should be changed before each merge with
 // master branch.
 const VERSION = "0.1"
+
+var Bot *tgbotapi.BotAPI
