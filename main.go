@@ -101,6 +101,12 @@ func main() {
 
 	Bot = bot
 
+	commands = map[string]command{
+		"/len":   command(commandLen),
+		"/rand":  command(commandRand),
+		"/words": command(commandWords),
+	}
+
 	go func() {
 		for update := range updates {
 			if update.Message == nil || update.Message.Text == "" {
