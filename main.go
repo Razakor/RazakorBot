@@ -99,9 +99,13 @@ func main() {
 
 	updates, err := bot.GetUpdatesChan(u)
 
+	// Setting global pointer to simplify access from everywhere
 	Bot = bot
 
+	// Registering commands
 	commands = map[string]command{
+		"/start": command(commandStart),
+		"/ping":  command(commandPing),
 		"/len":   command(commandLen),
 		"/rand":  command(commandRand),
 		"/words": command(commandWords),

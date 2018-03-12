@@ -9,6 +9,7 @@ import (
 	"gopkg.in/telegram-bot-api.v4"
 )
 
+// All functions that are ought to handle actual commands should match this type
 type command func(args []string, update tgbotapi.Update) string
 
 // commands is a map of command strings and function for invocation
@@ -52,9 +53,25 @@ func commandRand(args []string, update tgbotapi.Update) string {
 	}
 }
 
+func commandPing(args []string, update tgbotapi.Update) string {
+	return "Pong!"
+}
+
 func commandWords(args []string, update tgbotapi.Update) string {
 	m := strings.Split(update.Message.ReplyToMessage.Text, " ")
 	return strconv.Itoa(len(m))
+}
+
+func commandStart(args []string, update tgbotapi.Update) string {
+	return "RazakorBot " + VERSION + "\nCopyright (C) Razakor 2018\n" +
+		"Bot repo: https://github.com/Razakor/RazakorBot\n" +
+		"See LICENSE file for legal info.\n\n" +
+		"/start - this message;\n" +
+		"/help <command> - get help about command;\n" +
+		"/rand - generate random number;" +
+		"/len - count symbols in replied message;" +
+		"/words - count words in replied message;" +
+		"/ping - pong!"
 }
 
 // ProcessCommand processes received update and executes command if it is valid
@@ -70,6 +87,10 @@ func ProcessCommand(update tgbotapi.Update) {
 	if val, ok := commands[response]; ok {
 		response = val(args, update)
 	} else {
+		return
+	}
+	// Do not send anything if response body is empty
+	if response == "" {
 		return
 	}
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, response)
