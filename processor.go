@@ -9,10 +9,17 @@ import (
 	"gopkg.in/telegram-bot-api.v4"
 )
 
-func ProcessCommand(update tgbotapi.Update, args []string) {
+// command is a function for more readable check if string contains a command
+func command(s, command string) bool {
+	return strings.HasPrefix(s, command)
+}
+
+// ProcessCommand processes received update and executes command if it is valid
+func ProcessCommand(update tgbotapi.Update) {
+	args := strings.Split(update.Message.Text, " ")
 	var response string
 	chatID := update.Message.Chat.ID
-	if strings.HasPrefix(args[0], "/len") {
+	if command(args[0], "/len") {
 		if update.Message.ReplyToMessage == nil {
 			return
 		}
@@ -21,7 +28,7 @@ func ProcessCommand(update tgbotapi.Update, args []string) {
 		} else {
 			response = strconv.Itoa(utf8.RuneCountInString(update.Message.ReplyToMessage.Text))
 		}
-	} else if strings.HasPrefix(args[0], "/rand") {
+	} else if command(args[0], "/rand") {
 		if len(args) < 2 {
 			response = strconv.Itoa(rand.Intn(19) + 1)
 		} else {
@@ -49,9 +56,11 @@ func ProcessCommand(update tgbotapi.Update, args []string) {
 				response = strconv.Itoa(n - rand.Intn((n-b)+1))
 			}
 		}
-	} else if strings.HasPrefix(args[0], "/words") {
+	} else if command(args[0], "/words") {
 		m := strings.Split(update.Message.ReplyToMessage.Text, " ")
 		response = strconv.Itoa(len(m))
+	} else if command(args[0], "/ping") {
+		response = "Pong!"
 	}
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, response)
 	Bot.Send(msg)

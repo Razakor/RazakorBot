@@ -110,7 +110,7 @@ func main() {
 			log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
 
 			if strings.HasPrefix(update.Message.Text, "/") {
-				go ProcessCommand(update, strings.Split(update.Message.Text, " "))
+				go ProcessCommand(update)
 			}
 		}
 	}()
