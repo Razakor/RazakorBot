@@ -109,6 +109,26 @@ func main() {
 		"/len":   command(commandLen),
 		"/rand":  command(commandRand),
 		"/words": command(commandWords),
+		"/help":  command(commandHelp),
+	}
+
+	// Registering help pages
+	helpPages = map[string]string{
+		"/start": "Print some information about bot and all commands.",
+		"/help": "<command> Prints help page for a specified command.\n" +
+			"Some commands can accept additional argument. Required arguments are " +
+			"specified <like this>, and optional arguments are specified [like " +
+			"this]. Braces are ought to be ommited, they just denote if argument " +
+			"is required or not.",
+		"/ping":  "Do a pong!",
+		"/len":   "Measure a length of replied message **in symbols**.",
+		"/words": "Measures a length of replied message **in words**.",
+		"/rand": "Generate random number in range [1;20] i.e. \"throws a d20\"\n" +
+			"/rand <a> [b] generates a number in specified range. " +
+			"If b is ommitted or invalid, a number in rande [1;a] will be " +
+			"generated. If both number specified correctly, a range will be picked " +
+			"automatically: if a > b, then range is [a;b]; if b > a, then range is " +
+			"[b;a] obviously.",
 	}
 
 	go func() {

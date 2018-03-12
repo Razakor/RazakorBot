@@ -15,6 +15,9 @@ type command func(args []string, update tgbotapi.Update) string
 // commands is a map of command strings and function for invocation
 var commands map[string]command
 
+// helpPages is a map of commands and their help pages
+var helpPages map[string]string
+
 func commandLen(args []string, update tgbotapi.Update) string {
 	if update.Message.ReplyToMessage == nil {
 		return "Invalid command invocation"
@@ -68,10 +71,21 @@ func commandStart(args []string, update tgbotapi.Update) string {
 		"See LICENSE file for legal info.\n\n" +
 		"/start - this message;\n" +
 		"/help <command> - get help about command;\n" +
-		"/rand - generate random number;" +
-		"/len - count symbols in replied message;" +
-		"/words - count words in replied message;" +
-		"/ping - pong!"
+		"/rand - generate random number;\n" +
+		"/len - count symbols in replied message;\n" +
+		"/words - count words in replied message;\n" +
+		"/ping - pong!\n"
+}
+
+func commandHelp(args []string, update tgbotapi.Update) string {
+	if len(args) < 2 {
+		return "Invalid command invocation"
+	}
+	if val, ok := helpPages[args[1]]; ok {
+		return args[1] + " " + val
+	} else {
+		return "Invalid command invocation"
+	}
 }
 
 // ProcessCommand processes received update and executes command if it is valid
