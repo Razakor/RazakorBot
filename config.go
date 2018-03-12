@@ -71,8 +71,6 @@ func (c *BotConfig) ReadConfig(filename string) error {
 		return err
 	}
 	defer file.Close()
-	// TODO: allow comments in config, somehow
-	// Possible solution is to "preprocess" file before actually decoding it
 	decoder := json.NewDecoder(file)
 	err = decoder.Decode(&c)
 	return err

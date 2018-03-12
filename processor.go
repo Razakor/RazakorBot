@@ -25,7 +25,7 @@ func ProcessCommand(update tgbotapi.Update, args []string) {
 		if len(args) < 2 {
 			response = strconv.Itoa(rand.Intn(19) + 1)
 		} else {
-			var n, b int
+			var b int
 			n, err := strconv.Atoi(args[1])
 			if err != nil {
 				Bot.Send(tgbotapi.NewMessage(chatID, "Invalid arguments!"))
@@ -34,15 +34,20 @@ func ProcessCommand(update tgbotapi.Update, args []string) {
 			if len(args) > 2 {
 				b, err = strconv.Atoi(args[2])
 				if err != nil {
-					Bot.Send(tgbotapi.NewMessage(chatID, "Invalid arguments!"))
-					return
+					b = 1
 				}
+			} else {
+				b = 1
 			}
-			if n < 0 || b < 1 || b < n {
+			if n < 1 || b < 1 || n == b {
 				Bot.Send(tgbotapi.NewMessage(chatID, "Invalid arguments!"))
 				return
 			}
-			response = strconv.Itoa(b - rand.Intn((b-n)+1))
+			if n < b {
+				response = strconv.Itoa(b - rand.Intn((b-n)+1))
+			} else {
+				response = strconv.Itoa(n - rand.Intn((n-b)+1))
+			}
 		}
 	} else if strings.HasPrefix(args[0], "/words") {
 		m := strings.Split(update.Message.ReplyToMessage.Text, " ")
